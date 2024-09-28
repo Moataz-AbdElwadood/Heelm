@@ -35,7 +35,7 @@ def ask(request):
     # TODO : GET THE CONTENT Dynamically from request
     question = request.data.get('content')  # Assuming the input from the client is sent as JSON with 'content' key
     user_token = request.data.get('token')
-    print("user_token: " , user_token)
+
 
     if not question:
         return Response({"error": "No content provided"}, status=400)
@@ -62,8 +62,8 @@ def ask(request):
     else:
        new_token=create_sub()
        resp =try_ask_catch(question,new_token)
-       print("--------------------------------",resp.data)
-    #    print("--------------------------------2",resp.data)
+
+
        return resp
         
 
@@ -110,7 +110,7 @@ def create_sub():
         }
 
         subbing = Subscription.objects.create(**subbing_data)
-        print("TOKEN -------->",token)
+
         # subbing.save()
         # Prepare the booking data to create a Booking object
         return subbing_data["token"]
@@ -126,18 +126,18 @@ def create_sub():
 @method_decorator(csrf_exempt, name='dispatch')   
 class UpdateOrderStatusView(View):
     def post(self, request):
-        print("INSIDE UpdateOrderStatusView")
+
         if request.method == 'POST':
             data = json.loads(request.body)
-            print("---------UpdateOrderStatusView", data)
-            # print("---------UpdateOrderStatusView", data['reference'])
+
+
 
             if data['status'] == 'CAPTURED':
                 user_id = data['metadata']['user_id']
                 try:
                     subbing = Subscription.objects.get(id=user_id) 
                     subbing.payment_status = 'completed'
-                    print("sub completed",subbing)
+
 
                     # TODO: Generate new token for this user
                    
@@ -155,13 +155,14 @@ class PlaceEventOrderAPIView(APIView):
     def get_booking_creation_data(self, token):
         try:
             subbin = Subscription.objects.get(token=token)
-            print("Subscription Found:", subbin)
+
             return subbin
         except Subscription.DoesNotExist:
-            print("No subscription found for this token.")
+
             return None
 
     def get(self, request):
+
         # Get the token from the GET parameters
         token = request.GET.get('token')
 
@@ -181,7 +182,7 @@ class PlaceEventOrderAPIView(APIView):
             payment_url = create_payment(request, subbing_data)
         except Exception as e:
             # Handle any potential errors from create_payment
-            print("Payment creation error:", str(e))
+
             return JsonResponse({'error': 'Payment creation failed', 'details': str(e)}, status=500)
 
         # Ensure that a payment URL was generated

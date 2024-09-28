@@ -5,7 +5,7 @@ from django.contrib.sites.shortcuts import get_current_site
 import requests
 
 def get_post_hook_url(request):
-        print("HERE2222222222222",request)
+
         current_site = "7b84-156-181-98-161.ngrok-free.app/"
         post_hook_path = reverse('update-order-status')
         return f'https://{current_site}{post_hook_path}'
@@ -21,7 +21,7 @@ def create_payment(request, subbing):
     if not subbing:
          return None
     user_id=str(subbing.id)
-    print("INSIDE create_payment, thiss user_id: ", user_id)
+
     url = f"{TapConfig.API_BASE_URL}/v2/charges"
     headers = {
         "Authorization": f"Bearer {TapConfig.API_KEY}",
@@ -53,10 +53,10 @@ def create_payment(request, subbing):
     response = requests.post(url, headers=headers, json=data)
     if response.status_code == 200:
         payment_url = response.json()["transaction"]["url"]
-        print("=====================================",response)
+
         return payment_url
     else:
-        print("++++++++++++++++++++++++++++++++++++++",response)
+
         raise Exception("Payment creation failed")
 
 # awl ma ed5ol elserver lazm a5od el ip bta3o we a7olto el limite = 1 we da el default  api for auth
@@ -65,7 +65,7 @@ def create_payment(request, subbing):
 # api to payment that if successful bezawd el limit ely fel table 1 
 # create model for users that has, 1- IP. 2- Limit. 3- Name Optional. 
 def get_charge_status(tap_id):
-    print("11111111111111",tap_id)
+
     url = f"{TapConfig.API_BASE_URL}/v2/charges/{tap_id}"
     headers = {
         "Authorization": f"Bearer {TapConfig.API_KEY}",
